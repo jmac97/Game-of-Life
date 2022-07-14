@@ -6,9 +6,9 @@ gol::gol(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::gol)
 {
-//    QTimer *timer = new QTimer(this);
-//    connect(timer, &QTimer::timeout, this, QOverload<>::of(&gol::update));
-//    timer->start(1000);
+    QTimer *timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, QOverload<>::of(&gol::update));
+    timer->start(1000);
     ui->setupUi(this);
 }
 
@@ -30,21 +30,72 @@ void gol::seed_grid()
 
     // blinker
     cells_current.resize(100);  // resize top level vector
-    for (int i = 0; i < 100; i++)
+    cells_next_gen.resize(100);
+    empty.resize(100);
+    for (int i = 0; i < 100; i+=10)
     {
         cells_current[i].resize(100);  // resize each of the contained vectors
-        for (int j = 0; j < 100; j++)
+        cells_next_gen[i].resize(100);
+        empty[i].resize(100);
+
+        for (int j = 0; j < 100; j+=10)
         {
             cells_current[i][j] = 0;
+            cells_next_gen[i][j] = 0;
+            empty[i][j] = 0;
         }
     }
 
-
+    cells_current[20][30] = alive;
     cells_current[30][30] = alive;
-    cells_current[30][20] = alive;
-    cells_current[30][40] = alive;
+    cells_current[40][30] = alive;
 }
 
+void gol::get_next_generation() {
+    int neighbor = 0;
+    int count = 0;
+
+    for (int i = 10; i < 90; i+=10) {
+        for (int j =10; j < 90; j+=10) {
+
+            for (int k = i - 10; k <= i + 10; k+=10) {
+                for (int l = j - 10; l <= j + 10; l+=10) {
+
+                    if (cells_current[k][l] == true) {
+                            neighbor++;
+                    }
+                }
+            }
+
+            if (cells_current[i][j] == true) {
+                neighbor -= 1;
+                if (neighbor == 2 || neighbor == 3) {
+                    cells_next_gen[i][j] = true;
+                } else {
+                    cells_next_gen[i][j] = false;
+                }
+            } else {
+                if (neighbor == 3) {
+                    cells_next_gen[i][j] = true;
+                } else {
+                    cells_next_gen[i][j] = false;
+                }
+            }
+
+            neighbor = 0;
+
+        }
+    }
+}
+
+void gol::cell_swap() {
+    for (int i = 0; i < 100; i+=10) {
+        for (int j = 0; j < 100; j+=10) {
+            cells_current[i][j] = cells_next_gen[i][j];
+            cells_next_gen[i][j] = 0;
+        }
+    }
+}
 
 void gol::paintEvent(QPaintEvent *event)
 {
@@ -66,12 +117,29 @@ void gol::paintEvent(QPaintEvent *event)
     painter.setBrush(Qt::cyan);
 //    painter.setPen(Qt::cyan);
 
-    for (int i = 0; i < cells_current.size(); i+=10) {
-        for (int j = 0; j < cells_current[i].size(); j+=10) {
-            if (cells_current[i][j] == alive) {
-                painter.drawRect(i, j, 10, 10);
-            }
-        }
-    }
+     if (generation == 0) {
+         for (int i = 0; i < cells_current.size(); i+=10) {
+             for (int j = 0; j < cells_current[i].size(); j+=10) {
+                 if (cells_current[i][j] == alive) {
+                     painter.drawRect(i, j, 10, 10);
+                 }
+             }
+         }
+     } else {
+         get_next_generation();
+         for (int i = 0; i < cells_next_gen.size(); i+=10) {
+             for (int j = 0; j < cells_next_gen[i].size(); j+=10) {
+                 if (cells_next_gen[i][j] == alive) {
+                     painter.drawRect(i, j, 10, 10);
+//                     qDebug() << "Before swap: (" << i << ", " << j << ") is alive";
+                 }
+             }
+         }
+         cell_swap();
+     }
+     generation++;     
+
+     qDebug() << "Generation: " << generation;
+
 }
 
