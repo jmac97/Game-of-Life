@@ -61,10 +61,15 @@ protected:
     int window_width = 255;
     int window_height = 255;
 
+    int spacing = 10;
+
     std::vector<std::vector<bool>> cells_current;
     std::vector<std::vector<bool>> cells_next_gen;
 
 private:
     Ui::gol *ui;
+    int grid_offset = 200;
+    int scale = grid_offset/2;
+    bool alive = true;
 };
 #endif // GOL_H
