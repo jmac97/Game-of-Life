@@ -6,9 +6,9 @@ gol::gol(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::gol)
 {
-    QTimer *timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, QOverload<>::of(&gol::update));
-    timer->start(1000);
+//    QTimer *timer = new QTimer(this);
+//    connect(timer, &QTimer::timeout, this, QOverload<>::of(&gol::update));
+//    timer->start(1000);
     ui->setupUi(this);
 }
 
@@ -17,10 +17,24 @@ gol::~gol()
     delete ui;
 }
 
+void gol::set_timer() {
+    if (timer_started == false) {
+        QTimer *timer = new QTimer(this);
+        connect(timer, &QTimer::timeout, this, QOverload<>::of(&gol::update));
+        timer->start(1000);
+        timer_started = true;
+    }
+}
+
 void gol::set_window_parameters(int w, int h) {
     window_width = w;
     window_height = h;
     setFixedSize(window_width, window_height);
+}
+
+void gol::set_generation(int gen)
+{
+    generation = gen;
 }
 
 void gol::seed_grid()
@@ -31,25 +45,57 @@ void gol::seed_grid()
     // blinker
     cells_current.resize(100);  // resize top level vector
     cells_next_gen.resize(100);
-    empty.resize(100);
     for (int i = 0; i < 100; i+=10)
     {
         cells_current[i].resize(100);  // resize each of the contained vectors
         cells_next_gen[i].resize(100);
-        empty[i].resize(100);
 
         for (int j = 0; j < 100; j+=10)
         {
             cells_current[i][j] = 0;
             cells_next_gen[i][j] = 0;
-            empty[i][j] = 0;
         }
     }
 
+    glider();
+}
+
+void gol::blinker() {
+    bool alive = true;
     cells_current[20][30] = alive;
     cells_current[30][30] = alive;
     cells_current[40][30] = alive;
 }
+
+void gol::toad() {
+    bool alive = true;
+    cells_current[30][30] = alive;
+    cells_current[50][20] = alive;
+    cells_current[60][30] = alive;
+    cells_current[30][40] = alive;
+    cells_current[60][40] = alive;
+    cells_current[40][50] = alive;
+}
+
+void gol::beacon() {
+    bool alive = true;
+    cells_current[30][30] = alive;
+    cells_current[40][30] = alive;
+    cells_current[30][40] = alive;
+    cells_current[60][50] = alive;
+    cells_current[50][60] = alive;
+    cells_current[60][60] = alive;
+}
+
+void gol::glider() {
+    bool alive = true;
+    cells_current[30][30] = alive;
+    cells_current[50][30] = alive;
+    cells_current[40][40] = alive;
+    cells_current[50][40] = alive;
+    cells_current[40][50] = alive;
+}
+
 
 void gol::get_next_generation() {
     int neighbor = 0;
@@ -117,29 +163,29 @@ void gol::paintEvent(QPaintEvent *event)
     painter.setBrush(Qt::cyan);
 //    painter.setPen(Qt::cyan);
 
-     if (generation == 0) {
-         for (int i = 0; i < cells_current.size(); i+=10) {
-             for (int j = 0; j < cells_current[i].size(); j+=10) {
-                 if (cells_current[i][j] == alive) {
-                     painter.drawRect(i, j, 10, 10);
+    if (QEvent::Show) {
+        set_timer();
+        qDebug() << "Generation: " << generation;
+         if (generation == 0) {
+             for (int i = 0; i < cells_current.size(); i+=10) {
+                 for (int j = 0; j < cells_current[i].size(); j+=10) {
+                     if (cells_current[i][j] == alive) {
+                         painter.drawRect(i, j, 10, 10);
+                     }
                  }
              }
-         }
-     } else {
-         get_next_generation();
-         for (int i = 0; i < cells_next_gen.size(); i+=10) {
-             for (int j = 0; j < cells_next_gen[i].size(); j+=10) {
-                 if (cells_next_gen[i][j] == alive) {
-                     painter.drawRect(i, j, 10, 10);
-//                     qDebug() << "Before swap: (" << i << ", " << j << ") is alive";
+         } else {
+             get_next_generation();
+             for (int i = 0; i < cells_next_gen.size(); i+=10) {
+                 for (int j = 0; j < cells_next_gen[i].size(); j+=10) {
+                     if (cells_next_gen[i][j] == alive) {
+                         painter.drawRect(i, j, 10, 10);
+                     }
                  }
              }
+             cell_swap();
          }
-         cell_swap();
-     }
-     generation++;     
-
-     qDebug() << "Generation: " << generation;
-
+         generation++;
+    }
 }
 
