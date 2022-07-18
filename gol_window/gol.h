@@ -5,19 +5,12 @@
 #include <QPainter>
 #include <QTimer>
 #include <vector>
-#include <QToolBar>
-
-QT_BEGIN_NAMESPACE
-namespace Ui { class gol; }
-QT_END_NAMESPACE
 
 class gol : public QWidget
 {
     Q_OBJECT
-
 public:
-    gol(QWidget *parent = nullptr);
-    ~gol();
+    explicit gol(QWidget *parent = nullptr);
 
     // Not sure if this is needed
     void set_window_parameters(int w, int h);
@@ -30,47 +23,53 @@ public:
     void cell_swap();
     void update_grid();
 
+    void playGOL();
+    void pauseGOL();
+
 
 protected:
     void paintEvent(QPaintEvent *event);
 
-    //still lifes
+//    //still lifes
     void block();
     void beehive();
     void tub();
     void boat();
     void loaf();
 
-    //oscillators
+//    //oscillators
     void blinker();
     void toad();
     void beacon();
     void pulsar();
     void pentadecathlon();
 
-    //spaceships
+//    //spaceships
     void glider();
     void light_weight_spaceship();
     void middle_weight_spaceship();
     void heavy_weight_spaceship();
 
-    int cell_size = 10;
+//    int cell_size = 10;
     int generation = 0;
     bool timer_started = false;
 
-    // Not sure if this is needed
-    int window_width = 255;
-    int window_height = 255;
+//    // Not sure if this is needed
+//    int window_width = 255;
+//    int window_height = 255;
 
     int spacing = 10;
 
     std::vector<std::vector<bool>> cells_current;
     std::vector<std::vector<bool>> cells_next_gen;
-
-private:
-    Ui::gol *ui;
+//private:
     int grid_offset = 200;
     int scale = grid_offset/2;
     bool alive = true;
+    bool play = false;
+
+signals:
+
 };
+
 #endif // GOL_H
