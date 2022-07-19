@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     g = new gol();
     this->setCentralWidget(g);
+
     connect(ui->actionPlay, SIGNAL(toggled(bool)), ui->actionPause, SLOT(setVisible(bool)));
     connect(ui->actionPause, SIGNAL(toggled(bool)), ui->actionPlay, SLOT(setVisible(bool)));
     ui->actionPause->setVisible(false);
@@ -27,7 +28,6 @@ void MainWindow::on_actionPlay_triggered()
     g->playGOL();
     ui->actionPlay->setVisible(false);
     ui->actionPause->setVisible(true);
-
 }
 
 

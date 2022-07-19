@@ -1,107 +1,112 @@
 #include "gol.h"
 
 gol::gol(QWidget *parent) : QWidget{parent} {
-  this->seed_grid();
-  this->set_timer();
-}
-
-void gol::set_timer() {
-  if (timer_started == false) {
-    QTimer *timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, QOverload<>::of(&gol::update));
-    timer->start(1000);
-    timer_started = true;
-  }
-}
-
-// void gol::set_window_parameters(int w, int h) {
-//     window_width = w;
-//     window_height = h;
-//     setFixedSize(window_width, window_height);
-// }
-
-void gol::set_generation(int gen) { generation = gen; }
-
-void gol::seed_grid() {
-
   cells_current.resize(QWidget::width() + grid_offset,
                        std::vector<bool>(QWidget::height() + grid_offset));
   cells_next_gen.resize(QWidget::width() + grid_offset,
                         std::vector<bool>(QWidget::height() + grid_offset));
 
-  for (auto x = cells_current.begin(); x != cells_current.end(); x++) {
-
-    for (auto y = x->begin(); y != x->end(); y++) {
-      *y = !alive;
-      *y = !alive;
-    }
-  }
-
-  //    block();
-//  blinker();
-  glider();
+  this->set_timer();
 }
 
- void gol::block(){
-     cells_current[0 + scale][0 + scale] = alive;
-     cells_current[11 + scale][0 + scale] = alive;
-     cells_current[0 + scale][10 + scale] = alive;
-     cells_current[10 + scale][10 + scale] = alive;
- }
+// After x msec, gol widget gets updated and MainWindow changes
+// Start(x) begins timer where x is in the above interval in msec
+void gol::set_timer() {
+  if (timer_started == false) {
+    QTimer *timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, QOverload<>::of(&gol::update));
+    timer->start(250);
+    timer_started = true;
+  }
+}
+
+// "Starter" patterns for testing. Place in mousePressEvent
+void gol::block() {
+  if (cells_current[0 + scale][0 + scale] != alive) {
+    cells_current[0 + scale][0 + scale] = alive;
+    cells_current[11 + scale][0 + scale] = alive;
+    cells_current[0 + scale][10 + scale] = alive;
+    cells_current[10 + scale][10 + scale] = alive;
+    this->update();
+  }
+}
 
 void gol::blinker() {
-  cells_current[0 + scale][0 + scale] = alive;
-  cells_current[0 + scale][10 + scale] = alive;
-  cells_current[0 + scale][20 + scale] = alive;
+  if (cells_current[0 + scale][0 + scale] != alive) {
+    cells_current[0 + scale][0 + scale] = alive;
+    cells_current[0 + scale][10 + scale] = alive;
+    cells_current[0 + scale][20 + scale] = alive;
+    this->update();
+  }
 }
 
- void gol::toad() {
-     cells_current[30 + scale][30 + scale] = alive;
-     cells_current[50 + scale][20 + scale] = alive;
-     cells_current[60 + scale][30 + scale] = alive;
-     cells_current[30 + scale][40 + scale] = alive;
-     cells_current[60 + scale][40 + scale] = alive;
-     cells_current[40 + scale][50 + scale] = alive;
- }
+void gol::toad() {
+  if (cells_current[30 + scale][30 + scale] != alive) {
+    cells_current[30 + scale][30 + scale] = alive;
+    cells_current[50 + scale][20 + scale] = alive;
+    cells_current[60 + scale][30 + scale] = alive;
+    cells_current[30 + scale][40 + scale] = alive;
+    cells_current[60 + scale][40 + scale] = alive;
+    cells_current[40 + scale][50 + scale] = alive;
+    this->update();
+  }
+}
 
- void gol::beacon() {
-     cells_current[30 + scale][30 + scale] = alive;
-     cells_current[40 + scale][30 + scale] = alive;
-     cells_current[30 + scale][40 + scale] = alive;
-     cells_current[60 + scale][50 + scale] = alive;
-     cells_current[50 + scale][60 + scale] = alive;
-     cells_current[60 + scale][60 + scale] = alive;
- }
+void gol::beacon() {
+  if (cells_current[30 + scale][30 + scale] != alive) {
+    cells_current[30 + scale][30 + scale] = alive;
+    cells_current[40 + scale][30 + scale] = alive;
+    cells_current[30 + scale][40 + scale] = alive;
+    cells_current[60 + scale][50 + scale] = alive;
+    cells_current[50 + scale][60 + scale] = alive;
+    cells_current[60 + scale][60 + scale] = alive;
+    this->update();
+  }
+}
 
- void gol::glider() {
-     bool alive = true;
-     cells_current[30 + scale][30 + scale] = alive;
-     cells_current[50 + scale][30 + scale] = alive;
-     cells_current[40 + scale][40 + scale] = alive;
-     cells_current[50 + scale][40 + scale] = alive;
-     cells_current[40 + scale][50 + scale] = alive;
- }
+void gol::glider() {
+  if (cells_current[30 + scale][30 + scale] != alive) {
+    cells_current[30 + scale][30 + scale] = alive;
+    cells_current[50 + scale][30 + scale] = alive;
+    cells_current[40 + scale][40 + scale] = alive;
+    cells_current[50 + scale][40 + scale] = alive;
+    cells_current[40 + scale][50 + scale] = alive;
+    this->update();
+  }
+}
 
- void gol::mousePressEvent(QMouseEvent *event)
- {
-     if (generation == 0 && !play) {
-         int x = event->x();
-         int y = event->y();
+// Whenever use clicks on a square at start of the program, x and y get stored
+// in cells_current Calls update() at the end
+void gol::mousePressEvent(QMouseEvent *event) {
+  if (generation == 0 && !play) {
+    // "Starter" pattern
+    glider();
 
-         x = (x/10) * 10;
-         y = (y/10) * 10;
-         if (cells_current[x + scale][y + scale] == alive) {
-             cells_current[x + scale][y + scale] = false;
-         } else {
-             cells_current[x + scale][y + scale] = alive;
-         }
+    userX = event->x();
+    userY = event->y();
 
-     }
- }
+    // Truncating the X and Y values to be multiples of 10 to fit the grid
+    // Eg 51-59 become 50
+    userX = (userX / spacing) * spacing;
+    userY = (userY / spacing) * spacing;
 
+    if (cells_current[userX + scale][userY + scale] == alive) {
+      cells_current[userX + scale][userY + scale] = !alive;
+    } else {
+      cells_current[userX + scale][userY + scale] = alive;
+    }
+
+    this->update();
+  }
+}
+
+// Goes through the current grid (cells_current), compares each cell to its
+// neighbor, then fills cells_next_gen based on GOL rules
 void gol::get_next_generation() {
   int alive_neighbors = 0;
 
+  // Technically grid starts at 10. Need off set to handle checking cells on the
+  // edge of the grid
   for (int x = spacing; x < cells_current.size() - spacing; x += spacing) {
     for (int y = spacing; y < cells_current[x].size() - spacing; y += spacing) {
 
@@ -117,8 +122,8 @@ void gol::get_next_generation() {
       }
 
       if (cells_current[x][y] == alive) {
-        alive_neighbors -= 1; // remove the alive neighbors count that includes
-                              // the current cell
+        alive_neighbors -= 1; // Remove the alive neighbors count that includes
+                              // the the current cell
         if (alive_neighbors == 2 || alive_neighbors == 3) {
           cells_next_gen[x][y] = alive;
         } else {
@@ -137,6 +142,9 @@ void gol::get_next_generation() {
   }
 }
 
+// After filling the grid with cells_next_gen, fill cells_current with the
+// current grid of cells by grabbign the values still stored in cells_next_gen.
+// Latter is filled with dead cells
 void gol::cell_swap() {
   for (int x = 0; x < cells_current.size(); x += spacing) {
     for (int y = 0; y < cells_current[x].size(); y += spacing) {
@@ -150,49 +158,45 @@ void gol::playGOL() { play = true; }
 
 void gol::pauseGOL() { play = false; }
 
-void gol::get_user_cells()
-{
-
-}
-
+// Draws the grid and the cells
 void gol::paintEvent(QPaintEvent *event) {
 
   QPainter painter(this);
 
+  // Drawing x lines of the grid
   for (int x = 0; x <= QWidget::width(); x += spacing) {
     painter.drawLine(x, 0, x, QWidget::height());
   }
 
+  // Drawing y lines of the grid
   for (int y = 0; y <= QWidget::height(); y += spacing) {
     painter.drawLine(0, y, QWidget::width(), y);
   }
 
-  painter.setBrush(Qt::cyan);
-  ////    painter.setPen(Qt::cyan);
+  painter.setBrush(Qt::white);
+
+  // If the play button has been pressed...
   if (play) {
     qDebug() << "Generation: " << generation;
-    if (generation == 0) {
-      for (int x = scale; x < cells_current.size() - spacing; x += spacing) {
-        for (int y = scale; y < cells_current[x].size() - spacing;
-             y += spacing) {
-          if (cells_current[x][y] == alive) {
-            painter.drawRect(x - scale, y - scale, spacing, spacing);
-          }
+
+    get_next_generation();
+
+    for (int x = scale; x < cells_next_gen.size() - spacing; x += spacing) {
+      for (int y = scale; y < cells_next_gen.size() - spacing; y += spacing) {
+        if (cells_next_gen[x][y] == alive) {
+          painter.drawRect(x - scale, y - scale, spacing, spacing);
         }
       }
-    } else {
-      get_next_generation();
-      for (int x = scale; x < cells_next_gen.size() - spacing; x += spacing) {
-        for (int y = scale; y < cells_next_gen.size() - spacing; y += spacing) {
-          if (cells_next_gen[x][y] == alive) {
-            painter.drawRect(x - scale, y - scale, spacing, spacing);
-          }
-        }
-      }
-      cell_swap();
     }
+
+    cell_swap();
     generation++;
+
   } else if (!play) {
+    if (generation == 0) {
+      glider();
+    }
+
     for (int x = scale; x < cells_current.size() - spacing; x += spacing) {
       for (int y = scale; y < cells_current[x].size() - spacing; y += spacing) {
         if (cells_current[x][y] == alive) {
