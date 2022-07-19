@@ -13,9 +13,9 @@ class gol : public QWidget
 public:
     explicit gol(QWidget *parent = nullptr);
 
-    void playGOL();
-    void pauseGOL();
-
+    void play_GOL();
+    void pause_GOL();
+    void reset_GOL();
 
 private:
     void paintEvent(QPaintEvent *event);

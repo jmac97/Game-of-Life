@@ -21,6 +21,8 @@ private slots:
 
     void on_actionPause_triggered();
 
+    void on_actionReset_triggered();
+
 private:
     Ui::MainWindow *ui;
     gol *g;

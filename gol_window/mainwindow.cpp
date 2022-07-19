@@ -25,7 +25,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionPlay_triggered()
 {
-    g->playGOL();
+    g->play_GOL();
     ui->actionPlay->setVisible(false);
     ui->actionPause->setVisible(true);
 }
@@ -33,8 +33,16 @@ void MainWindow::on_actionPlay_triggered()
 
 void MainWindow::on_actionPause_triggered()
 {
-    g->pauseGOL();
+    g->pause_GOL();
     ui->actionPlay->setVisible(true);
     ui->actionPause->setVisible(false);
+}
+
+void MainWindow::on_actionReset_triggered()
+{
+    g->pause_GOL();
+    ui->actionPlay->setVisible(true);
+    ui->actionPause->setVisible(false);
+    g->reset_GOL();
 }
 

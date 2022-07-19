@@ -154,14 +154,30 @@ void gol::cell_swap() {
   }
 }
 
-void gol::playGOL() { play = true; }
+// Sets both cell vectors back to zero
+void gol::reset_GOL() {
+  for (int x = 0; x < cells_current.size(); x += spacing) {
+    for (int y = 0; y < cells_current[x].size(); y += spacing) {
+      cells_current[x][y] = !alive;
+      cells_next_gen[x][y] = !alive;
+    }
+  }
+  generation = 0;
+}
 
-void gol::pauseGOL() { play = false; }
+void gol::play_GOL() { play = true; }
+
+void gol::pause_GOL() { play = false; }
 
 // Draws the grid and the cells
 void gol::paintEvent(QPaintEvent *event) {
 
   QPainter painter(this);
+
+  painter.setBrush(Qt::white);
+  painter.drawRect(0, 0, QWidget::width(), QWidget::height());
+
+  painter.setBrush(Qt::black);
 
   // Drawing x lines of the grid
   for (int x = 0; x <= QWidget::width(); x += spacing) {
@@ -172,8 +188,6 @@ void gol::paintEvent(QPaintEvent *event) {
   for (int y = 0; y <= QWidget::height(); y += spacing) {
     painter.drawLine(0, y, QWidget::width(), y);
   }
-
-  painter.setBrush(Qt::white);
 
   // If the play button has been pressed...
   if (play) {
