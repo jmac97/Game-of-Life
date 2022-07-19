@@ -82,6 +82,23 @@ void gol::blinker() {
      cells_current[40 + scale][50 + scale] = alive;
  }
 
+ void gol::mousePressEvent(QMouseEvent *event)
+ {
+     if (generation == 0 && !play) {
+         int x = event->x();
+         int y = event->y();
+
+         x = (x/10) * 10;
+         y = (y/10) * 10;
+         if (cells_current[x + scale][y + scale] == alive) {
+             cells_current[x + scale][y + scale] = false;
+         } else {
+             cells_current[x + scale][y + scale] = alive;
+         }
+
+     }
+ }
+
 void gol::get_next_generation() {
   int alive_neighbors = 0;
 
@@ -133,6 +150,11 @@ void gol::playGOL() { play = true; }
 
 void gol::pauseGOL() { play = false; }
 
+void gol::get_user_cells()
+{
+
+}
+
 void gol::paintEvent(QPaintEvent *event) {
 
   QPainter painter(this);
@@ -154,7 +176,6 @@ void gol::paintEvent(QPaintEvent *event) {
         for (int y = scale; y < cells_current[x].size() - spacing;
              y += spacing) {
           if (cells_current[x][y] == alive) {
-            qDebug() << "alive";
             painter.drawRect(x - scale, y - scale, spacing, spacing);
           }
         }
@@ -171,12 +192,10 @@ void gol::paintEvent(QPaintEvent *event) {
       cell_swap();
     }
     generation++;
-  } else if (!play && generation != 0) {
-    qDebug() << "paused";
+  } else if (!play) {
     for (int x = scale; x < cells_current.size() - spacing; x += spacing) {
       for (int y = scale; y < cells_current[x].size() - spacing; y += spacing) {
         if (cells_current[x][y] == alive) {
-          qDebug() << "alive";
           painter.drawRect(x - scale, y - scale, spacing, spacing);
         }
       }

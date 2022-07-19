@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QTimer>
 #include <vector>
+#include <QMouseEvent>
 
 class gol : public QWidget
 {
@@ -25,6 +26,8 @@ public:
 
     void playGOL();
     void pauseGOL();
+
+    void get_user_cells();
 
 
 protected:
@@ -53,6 +56,8 @@ protected:
 //    int cell_size = 10;
     int generation = 0;
     bool timer_started = false;
+
+    void mousePressEvent(QMouseEvent *event);
 
 //    // Not sure if this is needed
 //    int window_width = 255;
