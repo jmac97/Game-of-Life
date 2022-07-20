@@ -6,6 +6,8 @@ gol::gol(QWidget *parent) : QWidget{parent} {
   cells_next_gen.resize(QWidget::width() + grid_offset,
                         std::vector<bool>(QWidget::height() + grid_offset));
 
+  qDebug() << QWidget::height();
+
   this->set_timer();
 }
 
@@ -89,6 +91,9 @@ void gol::mousePressEvent(QMouseEvent *event) {
     // Eg 51-59 become 50
     userX = (userX / spacing) * spacing;
     userY = (userY / spacing) * spacing;
+
+    qDebug() << "(" << userX << ", " << userY << ")";
+
 
     if (cells_current[userX + scale][userY + scale] == alive) {
       cells_current[userX + scale][userY + scale] = !alive;

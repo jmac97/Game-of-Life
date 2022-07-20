@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QSlider>
+#include <QGroupBox>
+#include <QLayout>
 #include "gol.h"
 
 QT_BEGIN_NAMESPACE
@@ -23,8 +26,17 @@ private slots:
 
     void on_actionReset_triggered();
 
+    void slider_setup();
+    void gol_setup();
+    void main_setup();
+
 private:
     Ui::MainWindow *ui;
     gol *g;
+    QSlider *speed_range;
+    QWidget *central;
+    QGroupBox *slider_box;
+    QHBoxLayout *slider_layout;
+    QHBoxLayout *main_layout;
 };
 #endif // MAINWINDOW_H

@@ -2,24 +2,32 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>466</width>
+    <height>366</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="centralWidget">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_2"/>
+  </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>466</width>
      <height>24</height>
     </rect>
    </property>
@@ -27,7 +35,7 @@
     <property name="title">
      <string>GOL</string>
     </property>
-    <addaction name="actionOpen"/>
+    <addaction name="actionSettings"/>
    </widget>
    <addaction name="menuGOL"/>
   </widget>
@@ -49,9 +57,9 @@
    <addaction name="actionPause"/>
    <addaction name="actionReset"/>
   </widget>
-  <action name="actionOpen">
+  <action name="actionSettings">
    <property name="text">
-    <string>Open</string>
+    <string>Settings</string>
    </property>
   </action>
   <action name="actionPlay">
@@ -88,6 +96,14 @@
    </property>
    <property name="toolTip">
     <string>Reset</string>
+   </property>
+  </action>
+  <action name="actionSpeed">
+   <property name="text">
+    <string>Speed</string>
+   </property>
+   <property name="toolTip">
+    <string>Speed</string>
    </property>
   </action>
  </widget>
