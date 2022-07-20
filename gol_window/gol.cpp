@@ -6,8 +6,6 @@ gol::gol(QWidget *parent) : QWidget{parent} {
   cells_next_gen.resize(QWidget::width() + grid_offset,
                         std::vector<bool>(QWidget::height() + grid_offset));
 
-  qDebug() << QWidget::height();
-
   this->set_timer();
 }
 
@@ -15,11 +13,25 @@ gol::gol(QWidget *parent) : QWidget{parent} {
 // Start(x) begins timer where x is in the above interval in msec
 void gol::set_timer() {
   if (timer_started == false) {
-    QTimer *timer = new QTimer(this);
+    timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, QOverload<>::of(&gol::update));
     timer->start(250);
     timer_started = true;
   }
+}
+
+// When signal from horizontal slider is received, timer interval
+// gets updated based on slider value
+void gol::speed_changed(int value)
+{
+    // Range of slider is 1-100. I want the speed to increase
+    // when you drag the slider to the right, so I need to
+    // reverse the values I receive
+    int v = 100 - value;
+
+    // *10 since slider is 1-100 and I want slowest interval to be
+    // 1 second or 1000 msec
+    timer->setInterval(v * 10);
 }
 
 // "Starter" patterns for testing. Place in mousePressEvent
@@ -168,6 +180,11 @@ void gol::reset_GOL() {
     }
   }
   generation = 0;
+}
+
+void gol::debug()
+{
+    qDebug() << "saw signal, triggering slot";
 }
 
 void gol::play_GOL() { play = true; }

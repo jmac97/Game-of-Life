@@ -18,8 +18,10 @@ set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
         gol.cpp
+        slider.cpp
         mainwindow.h
         gol.h
+        slider.h
         play.qrc
         mainwindow.ui
 )

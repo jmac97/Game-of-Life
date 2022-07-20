@@ -1,10 +1,5 @@
 #include "mainwindow.h"
-#include "QtWidgets/qpushbutton.h"
-#include "gol.h"
 #include "./ui_mainwindow.h"
-
-#include <QLayout>
-#include <QGroupBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -16,8 +11,11 @@ MainWindow::MainWindow(QWidget *parent)
     slider_setup();
     main_setup();
 
+    connect(speed_range, &QSlider::valueChanged, g, &gol::speed_changed);
+
     connect(ui->actionPlay, SIGNAL(toggled(bool)), ui->actionPause, SLOT(setVisible(bool)));
     connect(ui->actionPause, SIGNAL(toggled(bool)), ui->actionPlay, SLOT(setVisible(bool)));
+
     ui->actionPause->setVisible(false);
 }
 
@@ -50,8 +48,9 @@ void MainWindow::slider_setup()
 {
     slider_box = new QGroupBox();
     slider_layout = new QHBoxLayout;
+    slider_box->setFixedWidth(100);
 
-    speed_range = new QSlider(Qt::Horizontal);
+    speed_range = new Slider();
 
     slider_layout->addWidget(speed_range);
 

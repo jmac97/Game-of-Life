@@ -2,10 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QSlider>
 #include <QGroupBox>
 #include <QLayout>
 #include "gol.h"
+#include "slider.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

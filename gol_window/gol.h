@@ -16,12 +16,17 @@ public:
     void play_GOL();
     void pause_GOL();
     void reset_GOL();
+    void debug();
+
+public slots:
+    void speed_changed(int value);
 
 private:
     void paintEvent(QPaintEvent *event);
     void mousePressEvent(QMouseEvent *event);
 
     void set_timer();
+
     void get_next_generation();
     void cell_swap();
 
@@ -61,6 +66,8 @@ private:
 
     int userX = 0;
     int userY = 0;
+
+    QTimer *timer;
 
 };
 
