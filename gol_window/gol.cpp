@@ -6,7 +6,12 @@ gol::gol(QWidget *parent) : QWidget{parent} {
   cells_next_gen.resize(QWidget::width() + grid_offset,
                         std::vector<bool>(QWidget::height() + grid_offset));
 
+  qDebug() << "width: " << this->width();
+  qDebug() << "height: " << this->height();
+
   this->set_timer();
+
+  this->setMinimumSize(640,480);
 }
 
 // After x msec, gol widget gets updated and MainWindow changes
@@ -32,6 +37,11 @@ void gol::speed_changed(int value)
     // *10 since slider is 1-100 and I want slowest interval to be
     // 1 second or 1000 msec
     timer->setInterval(v * 10);
+}
+
+void gol::size_changed(int value) {
+    this->resize(value, this->height());
+    qDebug() << "input: " << value << " output: " << QWidget::width();
 }
 
 // "Starter" patterns for testing. Place in mousePressEvent

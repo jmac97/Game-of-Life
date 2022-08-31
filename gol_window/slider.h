@@ -9,6 +9,7 @@ class Slider : public QSlider
 
 public:
     Slider();
+    void set_parameters(int tick_interval, int range_min, int range_max, int single_step);
 
 signals:
 

@@ -34,10 +34,11 @@ private slots:
 private:
     Ui::MainWindow *ui;
     gol *g;
-    QSlider *speed_range;
+    Slider *speed_range;
+    Slider *size_range;
     QWidget *central;
     QGroupBox *slider_box;
-    QHBoxLayout *slider_layout;
+    QVBoxLayout *slider_layout;
     QHBoxLayout *main_layout;
 };
 #endif // MAINWINDOW_H

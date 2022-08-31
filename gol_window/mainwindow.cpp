@@ -7,16 +7,20 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    this->setWindowTitle("Game of Life");
+
     gol_setup();
     slider_setup();
     main_setup();
 
     connect(speed_range, &QSlider::valueChanged, g, &gol::speed_changed);
+    connect(size_range, &QSlider::valueChanged, g, &gol::size_changed);
 
     connect(ui->actionPlay, SIGNAL(toggled(bool)), ui->actionPause, SLOT(setVisible(bool)));
     connect(ui->actionPause, SIGNAL(toggled(bool)), ui->actionPlay, SLOT(setVisible(bool)));
 
     ui->actionPause->setVisible(false);
+
 }
 
 MainWindow::~MainWindow()
@@ -33,6 +37,7 @@ void MainWindow::main_setup() {
     central = new QWidget();
 
     central->setLayout(main_layout);
+    central->adjustSize();
     setCentralWidget(central);
 }
 
@@ -40,19 +45,22 @@ void MainWindow::gol_setup() {
     QHBoxLayout *layout = new QHBoxLayout;
 
     g = new gol();
-    g->setFixedWidth(280);
-    g->setLayout(layout);
+//    g->setLayout(layout);
 }
 
 void MainWindow::slider_setup()
 {
     slider_box = new QGroupBox();
-    slider_layout = new QHBoxLayout;
+    slider_layout = new QVBoxLayout;
     slider_box->setFixedWidth(100);
 
     speed_range = new Slider();
+    speed_range->set_parameters(10, 1, 100, 10);
+    size_range = new Slider();
+    size_range->set_parameters(10, 640, 740, 10);
 
     slider_layout->addWidget(speed_range);
+    slider_layout->addWidget(size_range);
 
     slider_box->setLayout((slider_layout));
 }

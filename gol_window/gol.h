@@ -20,6 +20,7 @@ public:
 
 public slots:
     void speed_changed(int value);
+    void size_changed(int value);
 
 private:
     void paintEvent(QPaintEvent *event);
