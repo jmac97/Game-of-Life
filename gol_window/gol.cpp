@@ -206,10 +206,12 @@ void gol::paintEvent(QPaintEvent *event) {
 
   QPainter painter(this);
 
+  //Brush defines fill styles
   painter.setBrush(Qt::white);
   painter.drawRect(0, 0, QWidget::width(), QWidget::height());
 
-  painter.setBrush(Qt::black);
+  // Pen defines line styles
+  painter.setPen(Qt::white);
 
   // Drawing x lines of the grid
   for (int x = 0; x <= QWidget::width(); x += spacing) {
@@ -220,6 +222,8 @@ void gol::paintEvent(QPaintEvent *event) {
   for (int y = 0; y <= QWidget::height(); y += spacing) {
     painter.drawLine(0, y, QWidget::width(), y);
   }
+
+  painter.setBrush(Qt::black);
 
   // If the play button has been pressed...
   if (play) {
